@@ -763,11 +763,14 @@ void Canvas::display()
                     auto worldPos = screenToWorld(sf::Vector2f(clickedScreenPos));
                     if (keyPressed->button == sf::Mouse::Button::Left)
                     {
-                        // THRUST TOWARDS CLICKED POS
-                        auto playerNow = getCurrentWorldState()->getObject(REDSHIP_ID, counter / 1000).value().posObj.objectAt(counter / 1000);
-                        auto thrustDir = (worldPos - playerNow.position).normalized();
-                        getCurrentWorldState()->eventHandler->onPlayerInputThrustTowards(thrustDir.x, thrustDir.y);
                         clickedPos = sf::Vector2(worldPos.x, worldPos.y);
+                        // THRUST TOWARDS CLICKED POS
+                        auto playerShipMaybe = getCurrentWorldState()->getObject(REDSHIP_ID, counter / 1000);
+                        if (playerShipMaybe.has_value()) {
+                            auto playerNow = playerShipMaybe.value().posObj.objectAt(counter / 1000);
+                            auto thrustDir = (worldPos - playerNow.position).normalized();
+                            getCurrentWorldState()->eventHandler->onPlayerInputThrustTowards(thrustDir.x, thrustDir.y);
+                        }
                     }
                     else if (keyPressed->button == sf::Mouse::Button::Right)
                     {

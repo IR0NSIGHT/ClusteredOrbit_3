@@ -21,7 +21,15 @@ public:
 
     ~BasicPuppetMaster()
     {
+        std::cout << this << std::endl;
+        std::cout << &changedObjects << std::endl;
+        assert(&changedObjects != nullptr);
+        std::cout << changedObjects.size() << std::endl;
+
         // DESTROY
+       for (auto& obj: changedObjects) {
+           std::cout << obj.newObj << obj.oldObj << std::endl;
+       }
     }
 
 private:

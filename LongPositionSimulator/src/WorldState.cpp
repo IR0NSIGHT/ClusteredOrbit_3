@@ -57,7 +57,7 @@ std::shared_ptr<WorldState> WorldState::update(double globalMillis, double delta
 
     
     auto outState = std::make_shared<WorldState>(objects.size());
-    delete outState->eventHandler;
+    //delete outState->eventHandler;
     outState->eventHandler = this->eventHandler;
     for (auto& obj : objects)
     {
