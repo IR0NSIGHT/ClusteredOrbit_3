@@ -5,9 +5,6 @@
 
 #include "../include/Collission.h"
 #include "../include/MagicMissile.h"
-#include "../include/shipIds.h"
-#include "../include/SpaceObject.h"
-#include "../include/Updateable.h"
 #include "../include/WorldState.h"
 
 void BasicPuppetMaster::setUp(const WorldState* oldState, WorldState* newState)
