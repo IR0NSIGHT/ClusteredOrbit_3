@@ -57,8 +57,8 @@ std::shared_ptr<WorldState> WorldState::update(double globalMillis, double delta
 
     
     auto outState = std::make_shared<WorldState>(objects.size());
-    //delete outState->eventHandler;
-    outState->eventHandler = this->eventHandler;
+    outState->eventHandler->playerState = this->eventHandler->playerState;  //copy over relevant info
+
     for (auto& obj : objects)
     {
         if (collided.find(obj.globalObjectId) != collided.end())

@@ -12,7 +12,7 @@
 class WorldState
 {
 public:
-    explicit WorldState(unsigned int size)
+    explicit WorldState(unsigned int size): eventHandler(std::make_unique<BasicPuppetMaster>())
     {
         objects.reserve(size);
     }
@@ -43,7 +43,7 @@ public:
     void printObjects() const;
 
     std::vector<SpaceObject> aliveObjectsAt(double time) const;
-    BasicPuppetMaster* eventHandler;
+    std::unique_ptr<BasicPuppetMaster> eventHandler;
 
     std::unordered_map<unsigned int, unsigned int> globalIdToInternalId;
     std::vector<SpaceObject> objects;

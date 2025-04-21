@@ -1,45 +1,37 @@
 ﻿#pragma once
+
 #include "PlayerState.h"
 #include "SpaceObject.h"
 
 class WorldState;
+
 struct CollissionPoint;
 
-struct ObjectChanged
-{
+struct ObjectChanged {
     SpaceObject oldObj;
     SpaceObject newObj;
 };
 
 
-class BasicPuppetMaster
-{
+class BasicPuppetMaster {
 public:
-    BasicPuppetMaster() : currentTime(0), oldState(nullptr), newState(nullptr)
-    {
+    BasicPuppetMaster() : currentTime(0), oldState(nullptr), newState(nullptr) {
     }
 
-    ~BasicPuppetMaster()
-    {
-        std::cout << this << std::endl;
-        std::cout << &changedObjects << std::endl;
-        assert(&changedObjects != nullptr);
-        std::cout << changedObjects.size() << std::endl;
+    BasicPuppetMaster(BasicPuppetMaster &other) : currentTime(other.currentTime), updateDelta(other.updateDelta),
+                                                  playerState(other.playerState) {};
 
-        // DESTROY
-       for (auto& obj: changedObjects) {
-           std::cout << obj.newObj << obj.oldObj << std::endl;
-       }
+    ~BasicPuppetMaster() {
     }
 
 private:
     //current global time
     double currentTime;
     double updateDelta;
-    const WorldState* oldState;
-    WorldState* newState;
-    double clickedX;
-    double clickedY;
+    const WorldState *oldState;
+    WorldState *newState;
+    double clickedX = 0;
+    double clickedY = 0;
     int playerFireWeapon = 0;
 
 public:
@@ -47,30 +39,27 @@ public:
     std::vector<ObjectChanged> changedObjects;
 
 public:
-    void onPlayerInputThrustTowards(double x, double y)
-    {
+    void onPlayerInputThrustTowards(double x, double y) {
         clickedX = x;
         clickedY = y;
     }
 
-    void onPlayerSelectObject(unsigned int targetId)
-    {
+    void onPlayerSelectObject(unsigned int targetId) {
         std::cout << "PLAYER TARGET " << targetId << std::endl;
         this->playerState.targetGlobalId = targetId;
     }
 
-    void onPlayerSelectWeapon(Weapon weapon)
-    {
+    void onPlayerSelectWeapon(Weapon weapon) {
         std::cout << "PLAYER WEAPON " << weapon << std::endl;
         this->playerState.selectedWeapon = weapon;
     }
 
-    void onPlayerInputFireMissile()
-    {
+    void onPlayerInputFireMissile() {
         playerFireWeapon++;
     }
 
-    void setUp(const WorldState* oldState, WorldState* newState);
+    void setUp(const WorldState *oldState, WorldState *newState);
+
     void setTotalTime(double time);
 
     void onNewObject(SpaceObject obj) const;
@@ -79,7 +68,7 @@ public:
 
     void onObjectChangedCourse(SpaceObject old, SpaceObject newObj) const;
 
-    void onUpdate(const SpaceObject& obj);
+    void onUpdate(const SpaceObject &obj);
 
 
     void onNewFutureCollission(CollissionPoint coll) const;

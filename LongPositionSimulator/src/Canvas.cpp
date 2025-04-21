@@ -677,7 +677,6 @@ std::shared_ptr<WorldState> spawnDemo()
     initial->putObject(bluShip, 0);
 
     initial->calculateCollissions(0);
-    initial->eventHandler = new BasicPuppetMaster();
     return initial;
 }
 
