@@ -61,16 +61,19 @@ inline sf::Color colorByFaction(Faction f)
     switch (f)
     {
     case BluFor:
-        return sf::Color(115, 127, 255);
+        return {115, 127, 255};
     case OpFor:
-        return sf::Color(255, 75, 75);
+        return {255, 75, 75};
     case Independent:
-        return sf::Color(84, 153, 82);
+        return {84, 153, 82};
     case Civilian:
-        return sf::Color(184, 0, 184);
+        return {184, 0, 184};
     case None:
-        return sf::Color(203, 169, 0);
+        return {203, 169, 0};
+        default:
+            return {1,2,3};
     }
+
 }
 
 struct ObjectMetaInfo

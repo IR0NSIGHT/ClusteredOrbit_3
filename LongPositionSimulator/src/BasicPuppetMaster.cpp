@@ -1,5 +1,4 @@
-﻿#pragma once
-#include "../include/BasicPuppetMaster.h"
+﻿#include "../include/BasicPuppetMaster.h"
 
 #include <cassert>
 #include <iostream>
