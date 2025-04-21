@@ -27,22 +27,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c91a554f-2b78-4cae-8a48-0ef762d71143" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/LongPositionSimulator/build/CMakeCache.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LongPositionSimulator/build/CMakeFiles/3.29.2/CMakeCCompiler.cmake" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LongPositionSimulator/build/CMakeFiles/3.29.2/CMakeCXXCompiler.cmake" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LongPositionSimulator/build/CMakeFiles/3.29.2/CMakeDetermineCompilerABI_C.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LongPositionSimulator/build/CMakeFiles/3.29.2/CMakeDetermineCompilerABI_CXX.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LongPositionSimulator/build/CMakeFiles/3.29.2/CMakeSystem.cmake" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LongPositionSimulator/build/CMakeFiles/3.29.2/CompilerIdC/CMakeCCompilerId.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LongPositionSimulator/build/CMakeFiles/3.29.2/CompilerIdC/a.out" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LongPositionSimulator/build/CMakeFiles/3.29.2/CompilerIdCXX/CMakeCXXCompilerId.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LongPositionSimulator/build/CMakeFiles/3.29.2/CompilerIdCXX/a.out" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LongPositionSimulator/build/CMakeFiles/CMakeConfigureLog.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LongPositionSimulator/build/CMakeFiles/cmake.check_cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LongPositionSimulator/rebuild.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/LongPositionSimulator/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LongPositionSimulator/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/LongPositionSimulator/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LongPositionSimulator/src/SpaceObject.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/LongPositionSimulator/src/SpaceObject.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LongPositionSimulator/src/Updateable.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/LongPositionSimulator/src/Updateable.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LongPositionSimulator/src/WorldState.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/LongPositionSimulator/src/WorldState.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LongPositionSimulator/src/WorldStateEventHandler.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/LongPositionSimulator/src/WorldStateEventHandler.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LongPositionSimulator/src/positionable.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/LongPositionSimulator/src/positionable.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LongPositionSimulator/src/vel3d.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/LongPositionSimulator/src/vel3d.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,31 +62,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "C/C++ File.LongPositionSimulator.cpp.executor": "Run",
-    "CMake Debug.ClusteredOrbit_3.executor": "Debug",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.RadMigrateCodeStyle": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.readMode.enableVisualFormatting": "true",
-    "RunOnceActivity.west.config.association.type.startup.service": "true",
-    "SHELLCHECK.PATH": "/home/klipper/.var/app/com.jetbrains.CLion/data/JetBrains/CLion2025.1/Shell Script/shellcheck",
-    "cf.first.check.clang-format": "false",
-    "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "/home/klipper/Documents/repos/ClusteredOrbit_3",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "terminal",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;C/C++ File.LongPositionSimulator.cpp.executor&quot;: &quot;Run&quot;,
+    &quot;CMake Debug.ClusteredOrbit_3.executor&quot;: &quot;Debug&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.RadMigrateCodeStyle&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.west.config.association.type.startup.service&quot;: &quot;true&quot;,
+    &quot;SHELLCHECK.PATH&quot;: &quot;/home/klipper/.var/app/com.jetbrains.CLion/data/JetBrains/CLion2025.1/Shell Script/shellcheck&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/klipper/Documents/repos/cmake-sfml-project&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;terminal&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/LongPositionSimulator" />
@@ -104,13 +96,13 @@
     </key>
   </component>
   <component name="RunManager" selected="C/C++ File.LongPositionSimulator.cpp">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="ClusteredOrbit_3" type="CMakeListConfigurationType" factoryName="CMakeListConfigurationFactory" temporary="true">
       <method v="2" />
-    </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
     </configuration>
     <configuration name="LongPositionSimulator.cpp" type="CppFileRunConfiguration" factoryName="CppFileRunConfiguration" nameIsGenerated="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" WORKING_DIR="file://$PROJECT_DIR$/LongPositionSimulator" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ClusteredOrbit_3" TARGET_NAME="LongPositionSimulator.cpp" CONFIG_NAME="LongPositionSimulator.cpp">
       <option name="sourceFile" value="$PROJECT_DIR$/LongPositionSimulator/LongPositionSimulator.cpp" />
@@ -153,7 +145,8 @@
       <updated>1745094672664</updated>
       <workItem from="1745094674884" duration="42000" />
       <workItem from="1745137159657" duration="8396000" />
-      <workItem from="1745155414680" duration="171000" />
+      <workItem from="1745155414680" duration="457000" />
+      <workItem from="1745226686640" duration="538000" />
     </task>
     <servers />
   </component>

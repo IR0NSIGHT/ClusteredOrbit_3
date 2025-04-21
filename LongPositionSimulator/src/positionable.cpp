@@ -1,6 +1,5 @@
-#include "../positionable.h"
+#include "../include/positionable.h"
 #include <cassert>
-#include "../vel3d.h"
 
 static const std::string idChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123579";
 // Linear Congruential Generator (LCG) parameters

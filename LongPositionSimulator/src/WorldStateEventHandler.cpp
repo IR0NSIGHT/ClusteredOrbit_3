@@ -1,7 +1,6 @@
-﻿#include "../WorldStateEventHandler.h"
+﻿#include "../include/WorldStateEventHandler.h"
 
-#include "../Collission.h"
-#include "../SpaceObject.h"
+#include "../include/Collission.h"
 
 void WorldStateEventHandler::onNewObject(SpaceObject obj) const
 {

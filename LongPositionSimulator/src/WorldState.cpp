@@ -1,11 +1,11 @@
-#include "../WorldState.h"
+#include "../include/WorldState.h"
 
 #include <cassert>
 #include <iostream>
 #include <set>
 #include <SFML/Window/WindowEnums.hpp>
 
-#include "../shipIds.h"
+#include "../include/shipIds.h"
 
 // vel3d implementation
 std::ostream& operator<<(std::ostream& os, const vel3d& vel)

@@ -1,4 +1,4 @@
-#include "../vel3d.h"
+#include "../include/vel3d.h"
 
 // Multiplication operator (scalar multiplication)
 vel3d operator*(const vel3d& v, double scalar)

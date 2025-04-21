@@ -1,4 +1,4 @@
-﻿#include "../SpaceObject.h"
+﻿#include "../include/SpaceObject.h"
 
 std::string SpaceObject::getName() const
 {
