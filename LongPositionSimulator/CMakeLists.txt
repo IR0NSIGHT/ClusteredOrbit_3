@@ -51,5 +51,29 @@ add_executable(LongPositionSimulator ${SOURCES})
 target_compile_features(LongPositionSimulator PRIVATE cxx_std_17)
 target_link_libraries(LongPositionSimulator SFML::Graphics Eigen3::Eigen)
 
+# Define the resource files to copy
+set(RESOURCE_FILES
+        ${CMAKE_SOURCE_DIR}/resources/4-Vesta.png
+        ${CMAKE_SOURCE_DIR}/resources/SpaceShip.png
+        ${CMAKE_SOURCE_DIR}/resources/OSIRIS_Mars_true_color.png
+        ${CMAKE_SOURCE_DIR}/resources/sternen_himmel.PNG
+        ${CMAKE_SOURCE_DIR}/resources/MartianMono.ttf
+)
+
+# Define the destination directory
+set(DESTINATION_DIR ${CMAKE_BINARY_DIR}/bin)
+
+# Create the destination directory if it doesn't exist
+file(MAKE_DIRECTORY ${DESTINATION_DIR})
+
+# Copy the resource files to the destination directory
+foreach(RESOURCE_FILE ${RESOURCE_FILES})
+    add_custom_command(TARGET LongPositionSimulator POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            ${RESOURCE_FILE}
+            ${DESTINATION_DIR}
+    )
+endforeach()
+
 # Optionally, disable building tests if not needed
 set(BUILD_TESTING OFF)
