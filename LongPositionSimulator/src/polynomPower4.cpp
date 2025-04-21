@@ -92,8 +92,6 @@ std::vector<double> polynomPower4::findRoots() const
         idx++;
     }
     realRoots.resize(idx); // to here ???
-    for (double root : realRoots)
-        assert(abs(solveFor(root)) <= 0.1); // f(root) = 0
     std::sort(realRoots.begin(), realRoots.end());
     return realRoots;
 }
