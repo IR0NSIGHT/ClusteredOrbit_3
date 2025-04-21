@@ -2,3 +2,5 @@
 x64/
 Debug
 /build/
+/cmake-build-debug/
+/CMakeFiles/
