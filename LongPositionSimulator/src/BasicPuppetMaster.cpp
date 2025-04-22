@@ -6,6 +6,7 @@
 #include "../include/Collission.h"
 #include "../include/MagicMissile.h"
 #include "../include/WorldState.h"
+#include "RouterPlanner.h"
 
 void BasicPuppetMaster::setUp(const WorldState* oldState, WorldState* newState)
 {
@@ -53,6 +54,8 @@ void BasicPuppetMaster::onObjectChangedCourse(SpaceObject old, SpaceObject newOb
     std::cout << "Object " << old << " changed course" << std::endl;
 }
 
+bool usedManeuver = false;
+
 void BasicPuppetMaster::onUpdate(const SpaceObject& obj)
 {
     if (!obj.lifetime.existsAt(currentTime))
@@ -61,6 +64,15 @@ void BasicPuppetMaster::onUpdate(const SpaceObject& obj)
         obj.updater->onUpdate(obj, oldState, newState, currentTime, updateDelta);
 
     SpaceObject objectNow(obj.objectAt(currentTime));
+
+    if (obj.globalObjectId == BLUSHIP_ID) {
+        auto maneuver = TimedManeuver{2.0, acc3d(1,2,3)};
+        if (!usedManeuver) {
+           auto updated = maneuver.applyManeuver(obj);
+           newState->putObject(updated, maneuver.absTime);
+           usedManeuver = true;
+        }
+    }
 
     if (obj.globalObjectId == REDSHIP_ID)
     {

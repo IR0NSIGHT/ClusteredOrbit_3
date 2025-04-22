@@ -16,3 +16,27 @@ nice to have:
         for each y, solve y = route(t), draw point at correspodning x
         => might need to rotate positionable to fit screen local space (if its rotated)
         => perfect curve, with no approximations or hard turns
+
+
+SpaceObject
+    - initial positionable
+    - timedManeuvers
+    - method: objectAt(time) -> returns object true position based on maneuvers
+    - objectAtWithCurrentCourse(time)
+        -returns assumed position in x seconds, using current Course, not knowing future course changes
+    - collission testing
+        - using assumed position
+        - using true position
+    how to hanlde
+        - ship wants to perform x maneuvers
+        - during maneuvers, ship gets hit/destoryed
+        - can not fully perform maneuvers
+        - actual movment is different from wanted (bc of collissions)
+
+    ship has
+        - currentCourse (positionable at this position, extrapolated to future)
+            - displax To Enemy User
+        - idealCourse (ship's desired path based on its maneuvers)
+            - display to friendly user
+        - true course (ship maneuver + outside forces, like being hit and pushed off course by a collission)
+            - dont display to user, only for physx

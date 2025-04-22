@@ -43,6 +43,7 @@ set(SOURCES
         src/vel3d.cpp
         src/WorldState.cpp
         src/WorldStateEventHandler.cpp
+        include/RouterPlanner.h
 )
 
 # Add the main executable
