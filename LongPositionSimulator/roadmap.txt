@@ -1,0 +1,18 @@
+route planner
+    in 5 seconds, perform this maneuver
+        snaps to current path
+        choose thrust dir
+        choose thrust strength
+        adjusted course is displayed
+
+player can select own ships and give orders
+    fly there
+    use this velocity
+    keep distnace to target
+    attack target
+
+nice to have:
+    plot route foreach max(width, height) screen
+        for each y, solve y = route(t), draw point at correspodning x
+        => might need to rotate positionable to fit screen local space (if its rotated)
+        => perfect curve, with no approximations or hard turns
