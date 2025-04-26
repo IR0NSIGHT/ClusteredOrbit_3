@@ -21,7 +21,7 @@ class SpaceObject
 public:
     // Copy constructor
     SpaceObject(const SpaceObject& space_object)
-        : posObj(space_object.posObj),
+        : posObj(space_object.getCurrentPosObj()),
           lifetime(space_object.lifetime),
           meta(space_object.meta),
           globalObjectId(space_object.globalObjectId),
@@ -58,7 +58,7 @@ public:
     {
         if (this != &other)
         {
-            this->posObj = other.posObj;
+            this->posObj = other.getCurrentPosObj();
             this->lifetime = other.lifetime;
             this->meta = other.meta;
             this->globalObjectId = other.globalObjectId;
@@ -69,11 +69,12 @@ public:
 
     std::string getName() const;
     positionable posObj;
+    positionable getCurrentPosObj() const;
     lifeTime lifetime;
     ObjectMetaInfo meta;
     unsigned int globalObjectId;
     std::unique_ptr<Updateable> updater;
-
+    std::vector<positionable> phases;
     using UpdateFunction = std::function<void(SpaceObject&, double)>;
 
     /** extrapolates object members to time. only math, no logic.

@@ -34,9 +34,9 @@ void BasicPuppetMaster::onNewObject(SpaceObject obj) const
         {
             auto bluship = blushipMaybe.value().objectAt(currentTime);
             //find vector perpendicular to current thrust and projectile velocity
-            auto evadeVector = vel3d::crossProduct(bluship.posObj.acceleration.normalized(),
-                                                   obj.posObj.velocity.normalized());
-            bluship.posObj.acceleration = evadeVector * 10; // upwards thrust
+            auto evadeVector = vel3d::crossProduct(bluship.getCurrentPosObj().acceleration.normalized(),
+                                                   obj.getCurrentPosObj().velocity.normalized());
+            bluship.getCurrentPosObj().acceleration = evadeVector * 10; // upwards thrust
             this->newState->putObject(bluship.objectAt(-currentTime), currentTime);
         }
     }
@@ -81,7 +81,7 @@ void BasicPuppetMaster::onUpdate(const SpaceObject& obj)
         // HANDLE THRUST TOWARDS INPUT
         if (clickedX != 0)
         {
-            objectNow.posObj.acceleration = acc3d{
+            objectNow.getCurrentPosObj().acceleration = acc3d{
                 clickedX, clickedY, 0
             }.normalized() * 20;
             this->clickedX = 0;
@@ -114,7 +114,6 @@ void BasicPuppetMaster::onUpdate(const SpaceObject& obj)
                                     obj, target.value(), lifeTime{fireTime, 10000}, 4000, 0);
                                 if (bullet)
                                 {
-                                    bullet.value().posObj.radius = 1;
                                     newState->putObject(bullet.value(), currentTime);
                                     std::cout << "blufor" << objectNow << " fire railgun" << std::endl;
                                 }
@@ -160,8 +159,8 @@ void BasicPuppetMaster::onCollissionHappened(CollissionPoint coll) const
 
     std::cout << "Collision happened at time: " << coll.time << " between " << coll.obj1 << " and " << coll.obj2 <<
         "\n";
-    std::cout << " distance at collission:" << coll.obj1.posObj.distanceToObjectAt(
-        coll.time, coll.obj2.posObj) << "\n";
-    std::cout << " position of collission:\n" << coll.obj1 << ": " << coll.obj1.posObj.posAt(coll.time) << " vs "
-        << coll.obj2 << ": " << coll.obj2.posObj.posAt(coll.time) << std::endl;
+    std::cout << " distance at collission:" << coll.obj1.getCurrentPosObj().distanceToObjectAt(
+        coll.time, coll.obj2.getCurrentPosObj()) << "\n";
+    std::cout << " position of collission:\n" << coll.obj1 << ": " << coll.obj1.getCurrentPosObj().posAt(coll.time) << " vs "
+        << coll.obj2 << ": " << coll.obj2.getCurrentPosObj().posAt(coll.time) << std::endl;
 }

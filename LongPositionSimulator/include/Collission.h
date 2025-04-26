@@ -19,7 +19,7 @@ struct CollissionPoint
 
     pos3d offsetAtCollission()
     {
-        return obj1.posObj.posAt(time) - obj2.posObj.posAt(time);
+        return obj1.getCurrentPosObj().posAt(time) - obj2.getCurrentPosObj().posAt(time);
     }
 };
 
@@ -103,8 +103,8 @@ public:
 
 inline std::optional<CollissionPoint> Collission::nextCollissionFast(const SpaceObject& objA, const SpaceObject& objB)
 {
-    const auto o1 = objA.posObj;
-    const auto o2 = objB.posObj;
+    const auto o1 = objA.getCurrentPosObj();
+    const auto o2 = objB.getCurrentPosObj();
     polynomPower4 xDist = distancBetweenObjectsByTime(o1.position.x, o2.position.x, o1.velocity.x,
                                                       o2.velocity.x, o1.acceleration.x,
                                                       o2.acceleration.x);

@@ -20,7 +20,7 @@ struct TimedManeuver {
 
     SpaceObject applyManeuver(const SpaceObject& object) {
         auto out = SpaceObject(object);
-        out.posObj = applyManeuver(out.posObj);
+        out.getCurrentPosObj() = applyManeuver(out.getCurrentPosObj());
         out.lifetime.start = absTime;
         return out;
     }

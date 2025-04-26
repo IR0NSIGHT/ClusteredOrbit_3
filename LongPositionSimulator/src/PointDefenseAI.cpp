@@ -46,12 +46,12 @@ void PointDefenseAI::onUpdate(const SpaceObject& thisShip, const WorldState* con
     acc3d totalAcc{};
     for (auto& missile : enemyMissiles)
     {
-        totalAcc = totalAcc + missile.posObj.acceleration;
+        totalAcc = totalAcc + missile.getCurrentPosObj().acceleration;
     }
     totalAcc = totalAcc / enemyMissiles.size();
     //thrust away from missiles
     auto updatedSelf = SpaceObject(thisShip.objectAt(currentTime));
-    updatedSelf.posObj.acceleration = totalAcc.normalized() * 10; // FIXME use ship thrust here.
+    updatedSelf.getCurrentPosObj().acceleration = totalAcc.normalized() * 10; // FIXME use ship thrust here.
     //outState->putObject(updatedSelf.objectAt(-currentTime));
 
     for (int i = 0; i < 20; i++)
@@ -64,7 +64,7 @@ void PointDefenseAI::onUpdate(const SpaceObject& thisShip, const WorldState* con
             auto missileHitColl = Collission::nextCollissionFast(thisShip, missile);
             if (!missileHitColl) //ignore missiles that will miss
                 continue;
-            if (missile.posObj.distanceToObjectAt(currentTime, thisShip.posObj) > PD_TURRET_RANGE)
+            if (missile.getCurrentPosObj().distanceToObjectAt(currentTime, thisShip.getCurrentPosObj()) > PD_TURRET_RANGE)
                 //max radar range for defense
                 continue;
             auto bullet = MagicMissile::ShipFireAtTarget(thisShip, missile,
@@ -73,7 +73,6 @@ void PointDefenseAI::onUpdate(const SpaceObject& thisShip, const WorldState* con
                                                          0.001);
             if (bullet)
             {
-                bullet.value().posObj.radius = 1;
                 bullet.value().globalObjectId = SpaceObject::nextId++;
                 outState->putObject(bullet.value(), currentTime);
             }

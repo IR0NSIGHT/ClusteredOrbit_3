@@ -87,7 +87,7 @@ std::shared_ptr<WorldState> WorldState::update(double globalMillis, double delta
     for (auto& obj : outState->objects)
     {
         auto& oldObj = getObject(obj.globalObjectId, globalMillis);
-        if (oldObj && !oldObj.value().posObj.courseEquals(obj.posObj))
+        if (oldObj && !oldObj.value().getCurrentPosObj().courseEquals(obj.getCurrentPosObj()))
         {
             outState->eventHandler->changedObjects.push_back(ObjectChanged{oldObj.value(), obj});
         }
@@ -157,8 +157,8 @@ void WorldState::calculateCollissions(double currentTime)
             {
                 //test: objects actually collide at this time.
                 assert(
-                    coll.value().offsetAtCollission().maxComponentAbs() <= coll.value().obj1.posObj.radius + coll.
-                    value().obj2.posObj.radius + 0.1);
+                    coll.value().offsetAtCollission().maxComponentAbs() <= coll.value().obj1.getCurrentPosObj().radius + coll.
+                    value().obj2.getCurrentPosObj().radius + 0.1);
                 if (obj.lifetime.existsAt(coll.value().time) && other.lifetime.existsAt(coll.value().time))
                 {
                     collissions.push_back(coll.value());
@@ -210,7 +210,7 @@ std::vector<SpaceObject> WorldState::aliveObjectsAt(double deltaMilliseconds) co
         if (obj.lifetime.start <= deltaMilliseconds && obj.lifetime.end >= deltaMilliseconds)
         {
             auto object = SpaceObject(obj);
-            object.posObj = obj.posObj.objectAt(deltaMilliseconds);
+            object.getCurrentPosObj() = obj.getCurrentPosObj().objectAt(deltaMilliseconds);
             remainingObjects.push_back(object);
         }
     }

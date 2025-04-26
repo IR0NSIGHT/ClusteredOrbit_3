@@ -21,8 +21,8 @@ void MissileGuidance::onUpdate(const SpaceObject& obj, const WorldState* const c
     if (missileSolution)
     {
         auto updatedMissile = missileSolution.value().obj1.objectAt(-currentTime);
-        missile.posObj = updatedMissile.posObj;
+        missile.getCurrentPosObj() = updatedMissile.getCurrentPosObj();
         outState->putObject(missile, currentTime); //write back updated
-        //std::cout << missile <<" adjust course with a=" << updatedMissile.posObj.acceleration.norm() << " target=" << target.value() << std::endl;
+        //std::cout << missile <<" adjust course with a=" << updatedMissile.getCurrentPosObj().acceleration.norm() << " target=" << target.value() << std::endl;
     }
 }

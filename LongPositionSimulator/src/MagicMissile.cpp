@@ -42,24 +42,24 @@ bool isValidDouble(double value)
 std::optional<CollissionPoint> MagicMissile::missileIntercept(const SpaceObject& gunShip, const SpaceObject& target,
                                                               double missileAcc)
 {
-    int xFactor = gunShip.posObj.position.x < target.posObj.position.x ? 1 : -1;
-    int yFactor = gunShip.posObj.position.y < target.posObj.position.y ? 1 : -1;
-    int zFactor = gunShip.posObj.position.z < target.posObj.position.z ? 1 : -1;
+    int xFactor = gunShip.getCurrentPosObj().position.x < target.getCurrentPosObj().position.x ? 1 : -1;
+    int yFactor = gunShip.getCurrentPosObj().position.y < target.getCurrentPosObj().position.y ? 1 : -1;
+    int zFactor = gunShip.getCurrentPosObj().position.z < target.getCurrentPosObj().position.z ? 1 : -1;
 
     auto xDist = polynomPower4{
-        0, 0, 0.5 * (target.posObj.acceleration.x - xFactor * missileAcc),
-        target.posObj.velocity.x - gunShip.posObj.velocity.x,
-        target.posObj.position.x - gunShip.posObj.position.x
+        0, 0, 0.5 * (target.getCurrentPosObj().acceleration.x - xFactor * missileAcc),
+        target.getCurrentPosObj().velocity.x - gunShip.getCurrentPosObj().velocity.x,
+        target.getCurrentPosObj().position.x - gunShip.getCurrentPosObj().position.x
     };
     auto yDist = polynomPower4{
-        0, 0, 0.5 * (target.posObj.acceleration.y - yFactor * missileAcc),
-        target.posObj.velocity.y - gunShip.posObj.velocity.y,
-        target.posObj.position.y - gunShip.posObj.position.y
+        0, 0, 0.5 * (target.getCurrentPosObj().acceleration.y - yFactor * missileAcc),
+        target.getCurrentPosObj().velocity.y - gunShip.getCurrentPosObj().velocity.y,
+        target.getCurrentPosObj().position.y - gunShip.getCurrentPosObj().position.y
     };
     auto zDist = polynomPower4{
-        0, 0, 0.5 * (target.posObj.acceleration.z - zFactor * missileAcc),
-        target.posObj.velocity.z - gunShip.posObj.velocity.z,
-        target.posObj.position.z - gunShip.posObj.position.z
+        0, 0, 0.5 * (target.getCurrentPosObj().acceleration.z - zFactor * missileAcc),
+        target.getCurrentPosObj().velocity.z - gunShip.getCurrentPosObj().velocity.z,
+        target.getCurrentPosObj().position.z - gunShip.getCurrentPosObj().position.z
     };
 
     //find time points where on one axis + give missile thrust, the distance on this axis is zero 
@@ -73,7 +73,7 @@ std::optional<CollissionPoint> MagicMissile::missileIntercept(const SpaceObject&
     criticalTs.insert(criticalTs.end(), zRoots.begin(), zRoots.end());
     std::sort(criticalTs.begin(), criticalTs.end());
 
-    if (target.posObj.acceleration.norm() > missileAcc)
+    if (target.getCurrentPosObj().acceleration.norm() > missileAcc)
         return std::nullopt;
 
     auto bestMissile = SpaceObject(positionable{});
@@ -89,11 +89,11 @@ std::optional<CollissionPoint> MagicMissile::missileIntercept(const SpaceObject&
     {
         double t = (tLower + tHigher) / 2;
         SpaceObject missile = magicMissile(gunShip, target, 0, t);
-        double diff = missile.posObj.acceleration.norm() - missileAcc;
+        double diff = missile.getCurrentPosObj().acceleration.norm() - missileAcc;
 
         if (abs(diff) < .1)
         {
-            return CollissionPoint(missile, target, t, bestMissile.posObj.posAt(bestTime));
+            return CollissionPoint(missile, target, t, bestMissile.getCurrentPosObj().posAt(bestTime));
         }
         if (diff > 0)
         {
@@ -111,8 +111,8 @@ std::optional<CollissionPoint> MagicMissile::missileIntercept(const SpaceObject&
 SpaceObject MagicMissile::magicMissile(const SpaceObject& gunShip, const SpaceObject& target, double timeStart,
                                        double flightTime)
 {
-    positionable gunStart = gunShip.posObj.objectAt(timeStart);
-    positionable targetStart = target.posObj.objectAt(timeStart);
+    positionable gunStart = gunShip.getCurrentPosObj().objectAt(timeStart);
+    positionable targetStart = target.getCurrentPosObj().objectAt(timeStart);
 
     pos3d missilePos = gunStart.posAt(0);
     vel3d missileVel = gunStart.velAt(0) + gunStart.velAt(0).normalized() * 100;
@@ -132,8 +132,8 @@ SpaceObject MagicMissile::magicMissile(const SpaceObject& gunShip, const SpaceOb
     ).objectAt(-timeStart);
 
     outMissile.updater = std::make_unique<MissileGuidance>(target.globalObjectId,
-                                                           outMissile.posObj.acceleration.norm());
-    assert(outMissile.posObj.radius == 5);
+                                                           outMissile.getCurrentPosObj().acceleration.norm());
+    assert(outMissile.getCurrentPosObj().radius == 5);
     auto coll = Collission::nextCollissionFast(gunShip, outMissile);
     assert(!coll.has_value() || coll->time > gunShip.lifetime.start || coll->time > target.lifetime.start);
     // delay life start so missile is out of bbx of gunShip
@@ -145,8 +145,8 @@ std::optional<SpaceObject> MagicMissile::ShipFireAtTarget(const SpaceObject& gun
                                                           double precisionError)
 {
     double timeShift = timeInterval.start;
-    positionable gunInT = gunShip.posObj.objectAt(timeShift);
-    positionable targetInT = target.posObj.objectAt(timeShift);
+    positionable gunInT = gunShip.getCurrentPosObj().objectAt(timeShift);
+    positionable targetInT = target.getCurrentPosObj().objectAt(timeShift);
 
     std::vector<LinearIntercept> intercepts = LinearIntercept::findInterceptions(targetInT, gunInT, bulletSpeed);
     //cant shoot at target if it doesnt exist yet. only consider solutions after life start.
@@ -168,16 +168,16 @@ std::optional<SpaceObject> MagicMissile::ShipFireAtTarget(const SpaceObject& gun
         ).objectAt(-timeShift);
 
         assert(
-            out.posObj.distanceToObjectAt(timeShift+ solution.timeOfIntercept, target.posObj) <= target.
-            posObj.radius + out.posObj.radius); //normalized bullet hits target
+            out.getCurrentPosObj().distanceToObjectAt(timeShift+ solution.timeOfIntercept, target.getCurrentPosObj()) <= target.
+            posObj.radius + out.getCurrentPosObj().radius); //normalized bullet hits target
         // DEBUG
         auto coll = Collission::nextCollissionFast(out, target);
         assert(coll.has_value());
 
         if (precisionError != 0)
         {
-            vel3d vel = out.posObj.velocity;
-            out.posObj.velocity = vel3d(vel.x * random(-precisionError + 1, precisionError + 1),
+            vel3d vel = out.getCurrentPosObj().velocity;
+            out.getCurrentPosObj().velocity = vel3d(vel.x * random(-precisionError + 1, precisionError + 1),
                                               vel.y * random(-precisionError + 1, precisionError + 1),
                                               vel.z * random(-precisionError + 1, precisionError + 1));
         }

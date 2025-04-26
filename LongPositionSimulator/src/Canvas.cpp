@@ -232,15 +232,15 @@ void Canvas::drawTacticalIcon(const SpaceObject& obj, const SpaceObject& refObj,
     int iconSize = 1;
     std::string displayText;
     sf::Shape* icon = nullptr;
-    positionable posi = useRef ? obj.posObj - refObj.posObj : obj.posObj;
-    auto screenPosObj = worldToScreen(obj.posObj.position);
+    positionable posi = useRef ? obj.getCurrentPosObj() - refObj.getCurrentPosObj() : obj.getCurrentPosObj();
+    auto screenPosObj = worldToScreen(obj.getCurrentPosObj().position);
     
     sf::Text text(font);
     text.setCharacterSize(15);
     text.setFillColor(colorByFaction(obj.meta.faction));
     text.setPosition(sf::Vector2f(screenPosObj));
     
-    displayText = obj.posObj.toCharId(obj.globalObjectId) +
+    displayText = obj.getCurrentPosObj().toCharId(obj.globalObjectId) +
                 "\n" + objectTypeToString(obj.meta.type) + "\n";
     if (posi.isAccelerated())
     {
@@ -321,7 +321,7 @@ void Canvas::drawTacticalRanges(const SpaceObject& obj)
         icon.setFillColor(sf::Color::Transparent);
         icon.setOutlineColor(color);
         icon.setOrigin(radiusV);
-        icon.setPosition(worldToScreen(obj.posObj.position));
+        icon.setPosition(worldToScreen(obj.getCurrentPosObj().position));
         window.draw(icon, sf::Transform::Identity);
     }
 }
@@ -332,26 +332,26 @@ void Canvas::drawPhysicalObject(const SpaceObject& obj, double currentTime)
     sf::Sprite sprite(texture);
 
     sprite.scale(sf::Vector2f(1. / texture.getSize().x, 1. / texture.getSize().y));
-    sprite.setPosition(sf::Vector2f(obj.posObj.position.x, obj.posObj.position.y));
-    sprite.scale(sf::Vector2f(obj.posObj.radius * 2, obj.posObj.radius * 2));
+    sprite.setPosition(sf::Vector2f(obj.getCurrentPosObj().position.x, obj.getCurrentPosObj().position.y));
+    sprite.scale(sf::Vector2f(obj.getCurrentPosObj().radius * 2, obj.getCurrentPosObj().radius * 2));
     sprite.setOrigin({sf::Vector2f(texture.getSize().x / 2., texture.getSize().y / 2.)});
 
     auto axis = pos3d(0, 1, 0);
-    auto a = obj.posObj.acceleration.normalized();
+    auto a = obj.getCurrentPosObj().acceleration.normalized();
     double angle = std::atan2(a.x, a.y) + M_PI;
     sprite.rotate(-sf::radians(angle));
     window.draw(sprite, worldToScreen());
 
     // Create a circle shape for the object
     sf::CircleShape circle; // Radius of 20 pixels
-    double screenRadius = scaleT.transformPoint(sf::Vector2f(obj.posObj.radius, 0)).x;
+    double screenRadius = scaleT.transformPoint(sf::Vector2f(obj.getCurrentPosObj().radius, 0)).x;
     circle.setRadius(screenRadius);
     circle.setOrigin(sf::Vector2f(screenRadius, screenRadius));
 
     circle.setFillColor(sf::Color::Transparent);
     circle.setOutlineColor(sf::Color::White);
     circle.setOutlineThickness(1); // Set the thickness of the outline
-    auto worldPos = obj.posObj.position;
+    auto worldPos = obj.getCurrentPosObj().position;
     circle.setPosition(worldToScreen(worldPos));
 
     window.draw(circle, sf::Transform::Identity);
@@ -394,7 +394,7 @@ void Canvas::drawPath(const SpaceObject& obj, double currentTime, bool physicalV
     //draw path
     if (obj.meta.type == ObjectType::SHIP || obj.meta.type == ObjectType::MISSILE)
     {
-        pos3d previous = obj.posObj.posAt(currentTime);
+        pos3d previous = obj.getCurrentPosObj().posAt(currentTime);
         bool drawBBXPath = physicalVisible;
         const double timeStep = std::max(3, roundToNearestPowerOfTen(1 / scale) / 10) / 3.;
         const int totalSteps = 100;
@@ -404,10 +404,10 @@ void Canvas::drawPath(const SpaceObject& obj, double currentTime, bool physicalV
             double color = (1. - t / totalSteps) * 255;
             auto sfColor = sf::Color(color, color, color, 128 + 64);
             //draw velocity
-            pos3d posNext = obj.posObj.posAt(i);
+            pos3d posNext = obj.getCurrentPosObj().posAt(i);
             if (drawBBXPath)
                 lineBetweenRel(previous.x, previous.y, posNext.x, posNext.y, sfColor,
-                               obj.posObj.radius);
+                               obj.getCurrentPosObj().radius);
             simpleLineInWorld(previous.x, previous.y, posNext.x, posNext.y, sfColor);
             window.draw(guiSquare(posNext, 4, sfColor, sfColor), sf::Transform::Identity);
 
@@ -428,18 +428,18 @@ void Canvas::drawTarget(const SpaceObject& target, const SpaceObject& playerShip
         return;
     auto targetObj = target.objectAt(currentTime);
     auto circle = getCircle(30, sf::Color::Yellow, sf::Color::Transparent);
-    circle.setPosition(worldToScreen(targetObj.posObj.position));
+    circle.setPosition(worldToScreen(targetObj.getCurrentPosObj().position));
     window.draw(circle, sf::Transform::Identity);
 
     // DRAW MINIMAL DIST POINT TO TARGET
 
     double t_min_abs = Collission::nextExtremePointDistanceBetween(
-        targetObj.posObj, playerShip.posObj, currentTime);
+        targetObj.getCurrentPosObj(), playerShip.getCurrentPosObj(), currentTime);
     if (t_min_abs == -1)
         t_min_abs = currentTime;
     {
-        pos3d posMinPlayer = playerShip.posObj.posAt(t_min_abs);
-        pos3d posMinTarget = targetObj.posObj.posAt(t_min_abs);
+        pos3d posMinPlayer = playerShip.getCurrentPosObj().posAt(t_min_abs);
+        pos3d posMinTarget = targetObj.getCurrentPosObj().posAt(t_min_abs);
         simpleLineInWorld(posMinPlayer.x, posMinPlayer.y, posMinTarget.x, posMinTarget.y,
                           sf::Color::Yellow);
         pos3d middle = (posMinPlayer + posMinTarget) / 2.;
@@ -456,9 +456,9 @@ void Canvas::drawPositionableInfo(const SpaceObject& obj, double currentTime)
     auto objNow = obj.objectAt(currentTime);
     //draw thrust vector
     if (obj.meta.type == ObjectType::SHIP)
-        lineBetweenRel(objNow.posObj.position.x, objNow.posObj.position.y,
-                       objNow.posObj.position.x + objNow.posObj.acceleration.x * 5.,
-                       objNow.posObj.position.y + objNow.posObj.acceleration.y * 5., sf::Color::Cyan);
+        lineBetweenRel(objNow.getCurrentPosObj().position.x, objNow.getCurrentPosObj().position.y,
+                       objNow.getCurrentPosObj().position.x + objNow.getCurrentPosObj().acceleration.x * 5.,
+                       objNow.getCurrentPosObj().position.y + objNow.getCurrentPosObj().acceleration.y * 5., sf::Color::Cyan);
 }
 
 
@@ -469,7 +469,7 @@ void Canvas::draw(std::shared_ptr<WorldState> worldState, std::vector<SpaceObjec
         auto anchorObjMaybe = worldState->getObject(worldState->eventHandler->playerState.anchorGlobalId, currentTime);
         if (anchorObjMaybe && worldState->eventHandler->playerState.anchorGlobalId != 0)
         {
-            auto pos = anchorObjMaybe.value().posObj.posAt(currentTime);
+            auto pos = anchorObjMaybe.value().getCurrentPosObj().posAt(currentTime);
             shift = sf::Transform::Identity;
             shift.translate(sf::Vector2f(-pos.x, -pos.y));
         }
@@ -487,7 +487,7 @@ void Canvas::draw(std::shared_ptr<WorldState> worldState, std::vector<SpaceObjec
     {
         auto ref = worldState->getObject(worldState->eventHandler->playerState.referenceObjectId, currentTime);
         if (ref)
-            drawSpiderWeb(ref.value().posObj.objectAt(currentTime));
+            drawSpiderWeb(ref.value().getCurrentPosObj().objectAt(currentTime));
     }
     else
         drawGrid();
@@ -508,7 +508,7 @@ void Canvas::draw(std::shared_ptr<WorldState> worldState, std::vector<SpaceObjec
     {
         if (!obj.lifetime.existsAt(currentTime))
             continue;
-        auto radiusScreen = scaleT.transformPoint(sf::Vector2f(obj.posObj.radius, 0)).x;
+        auto radiusScreen = scaleT.transformPoint(sf::Vector2f(obj.getCurrentPosObj().radius, 0)).x;
         bool phyiscallyVisisble =  (radiusScreen > 1);
         
         drawPath(obj, currentTime, phyiscallyVisisble);
@@ -549,7 +549,7 @@ void Canvas::draw(std::shared_ptr<WorldState> worldState, std::vector<SpaceObjec
         auto target =worldState->eventHandler->playerState.targetGlobalId != 0 ? worldState->getObject(worldState->eventHandler->playerState.targetGlobalId, currentTime) : std::nullopt;
         if (self && target)
         {
-            double dist = round(self.value().posObj.distanceToObjectAt(currentTime, target.value().posObj));
+            double dist = round(self.value().getCurrentPosObj().distanceToObjectAt(currentTime, target.value().getCurrentPosObj()));
             ss << "target distance=" << dist << "m\n";
         }
     }
@@ -583,7 +583,7 @@ std::vector<SpaceObject> ShipDefendAgainstMissile(SpaceObject gunShip, SpaceObje
     //find time t, where the position of gunShip at t and position of missile in t+1 is exactly the gunspeed
     // that way, a bullet fired at t, would fly 1 second and then impact the missile
     auto distanceSqEq = Collission::distanceSquaredBetweenObjectsByTime(
-        gunShip.posObj, missile.posObj.objectAt(flightTime));
+        gunShip.getCurrentPosObj(), missile.getCurrentPosObj().objectAt(flightTime));
     double desiredDistanceSq = bulletSpeed * flightTime * bulletSpeed * flightTime;
     distanceSqEq.e -= desiredDistanceSq;
 
@@ -593,14 +593,14 @@ std::vector<SpaceObject> ShipDefendAgainstMissile(SpaceObject gunShip, SpaceObje
     for (auto time : solutionTimes)
     {
         assert(
-            (gunShip.posObj.posAt(time)-missile.posObj.posAt(time+flightTime)).norm() <= bulletSpeed *
+            (gunShip.getCurrentPosObj().posAt(time)-missile.getCurrentPosObj().posAt(time+flightTime)).norm() <= bulletSpeed *
             flightTime + 0.1);
         if (time < 0)
             continue;
         SpaceObject bullet(
             positionable{
-                gunShip.posObj.posAt(time),
-                missile.posObj.posAt(time + flightTime) - gunShip.posObj.posAt(time),
+                gunShip.getCurrentPosObj().posAt(time),
+                missile.getCurrentPosObj().posAt(time + flightTime) - gunShip.getCurrentPosObj().posAt(time),
                 acc3d{}, 1
             },
             lifeTime{0, 1000000},
@@ -610,12 +610,12 @@ std::vector<SpaceObject> ShipDefendAgainstMissile(SpaceObject gunShip, SpaceObje
         //normalize bullet to t = timeStart
         bullet = bullet.objectAt(-time);
 
-        assert(bullet.posObj.distanceToObjectAt(time + 0,gunShip.posObj) <= 0.1);
+        assert(bullet.getCurrentPosObj().distanceToObjectAt(time + 0,gunShip.getCurrentPosObj()) <= 0.1);
         assert(
-            bullet.posObj.distanceToObjectAt(time + 0,missile.posObj.objectAt(flightTime)) <= bulletSpeed *
+            bullet.getCurrentPosObj().distanceToObjectAt(time + 0,missile.getCurrentPosObj().objectAt(flightTime)) <= bulletSpeed *
             flightTime + 0.1);
         //distance between startpoint and where missile will be in one seconds, is exactly the distance the bullet can travel in one seconds
-        //    assert((bullet.posObj.posAt(time+ flightTime) - missile.posObj.posAt(time + flightTime)).norm() <= 0.1);
+        //    assert((bullet.getCurrentPosObj().posAt(time+ flightTime) - missile.getCurrentPosObj().posAt(time + flightTime)).norm() <= 0.1);
 
 
         bullet = bullet.objectAt(-startTime);
@@ -724,7 +724,7 @@ void Canvas::display()
                     //TEST IF ANY OBJECT WAS CLICKED
                     for (auto& obj : getCurrentWorldState()->objects)
                     {
-                        auto objectWorldPos = obj.objectAt(counter / 1000).posObj.position;
+                        auto objectWorldPos = obj.objectAt(counter / 1000).getCurrentPosObj().position;
                         auto objectScreenPos = worldToScreen(objectWorldPos);
                         objectScreenPos.x -= clickedScreenPos.x;
                         objectScreenPos.y -= clickedScreenPos.y;
@@ -766,7 +766,7 @@ void Canvas::display()
                         // THRUST TOWARDS CLICKED POS
                         auto playerShipMaybe = getCurrentWorldState()->getObject(REDSHIP_ID, counter / 1000);
                         if (playerShipMaybe.has_value()) {
-                            auto playerNow = playerShipMaybe.value().posObj.objectAt(counter / 1000);
+                            auto playerNow = playerShipMaybe.value().getCurrentPosObj().objectAt(counter / 1000);
                             auto thrustDir = (worldPos - playerNow.position).normalized();
                             getCurrentWorldState()->eventHandler->onPlayerInputThrustTowards(thrustDir.x, thrustDir.y);
                         }
@@ -774,7 +774,7 @@ void Canvas::display()
                     else if (keyPressed->button == sf::Mouse::Button::Right)
                     {
                         auto player = getCurrentWorldState()->getObject(REDSHIP_ID, counter / 1000).value().objectAt(counter / 1000.);
-                        player.posObj.position = pos3d(worldPos.x, worldPos.y, 0);
+                        player.getCurrentPosObj().position = pos3d(worldPos.x, worldPos.y, 0);
                         getCurrentWorldState()->putObject(player.objectAt(-counter / 1000.), counter/1000);
                     }
                 }
