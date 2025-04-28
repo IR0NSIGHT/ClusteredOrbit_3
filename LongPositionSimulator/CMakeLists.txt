@@ -7,16 +7,19 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-# build SFML from source
+# Include FetchContent
 include(FetchContent)
-FetchContent_Declare(SFML
+
+# Build SFML from source
+FetchContent_Declare(
+        SFML
         GIT_REPOSITORY https://github.com/SFML/SFML.git
         GIT_TAG 3.0.x
         GIT_SHALLOW ON
         EXCLUDE_FROM_ALL
-        SYSTEM)
+        SYSTEM
+)
 FetchContent_MakeAvailable(SFML)
-
 
 # Find the Eigen3 package
 find_package(Eigen3 3.4.0 REQUIRED NO_MODULE)
@@ -25,29 +28,12 @@ find_package(Eigen3 3.4.0 REQUIRED NO_MODULE)
 include_directories(${EIGEN3_INCLUDE_DIR})
 include_directories(include)
 
-# List all source files
-set(SOURCES
-        src/BasicPuppetMaster.cpp
-        src/Canvas.cpp
-        src/linearInterceptEquation.cpp
-        src/LongPositionSimulator.cpp
-        src/MagicMissile.cpp
-        src/MissileGuidance.cpp
-        src/ObjectMetaInfo.cpp
-        src/PlayerState.cpp
-        src/PointDefenseAI.cpp
-        src/polynomPower4.cpp
-        src/positionable.cpp
-        src/SpaceObject.cpp
-        src/Updateable.cpp
-        src/vel3d.cpp
-        src/WorldState.cpp
-        src/WorldStateEventHandler.cpp
-        include/RouterPlanner.h
-)
+# List all source files except test files
+file(GLOB_RECURSE SOURCES "src/*.cpp")
+list(FILTER SOURCES EXCLUDE REGEX "src/test_.*\\.cpp")
 
 # Add the main executable
-add_executable(LongPositionSimulator ${SOURCES})
+add_executable(LongPositionSimulator LongPositionSimulator.cpp ${SOURCES})
 
 target_compile_features(LongPositionSimulator PRIVATE cxx_std_17)
 target_link_libraries(LongPositionSimulator SFML::Graphics Eigen3::Eigen)
@@ -77,7 +63,10 @@ foreach(RESOURCE_FILE ${RESOURCE_FILES})
 endforeach()
 
 
-include(FetchContent)
+########################### UNIT TESTS ####################################
+
+
+# Include GoogleTest
 FetchContent_Declare(
         googletest
         URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
@@ -86,4 +75,22 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-add_subdirectory(tests)
+# Enable testing
+enable_testing()
+
+# List all test source files
+file(GLOB_RECURSE TEST_SOURCES "${CMAKE_SOURCE_DIR}/src/test_*.cpp")
+
+# Add the test executable
+add_executable(runTests ${TEST_SOURCES} ${SOURCES}
+        test_main.cpp)
+
+# Link GoogleTest and other necessary libraries to the test executable
+target_link_libraries(runTests GTest::gtest GTest::gtest_main SFML::Graphics Eigen3::Eigen)
+
+# Include directories for your main project's headers
+target_include_directories(runTests PRIVATE ${PROJECT_SOURCE_DIR}/include)
+
+# Discover and register tests
+include(GoogleTest)
+gtest_discover_tests(runTests)

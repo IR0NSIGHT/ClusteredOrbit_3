@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <cassert>
-#include "../include/WorldState.h"
+#include "WorldState.h"
 #include <cmath>
 #include <functional>
 #include <complex>
@@ -11,9 +11,9 @@
 #include <complex>
 #include <cmath>
 
-#include "../include/polynomPower4.h"
-#include "../include/linearInterceptEquation.h"
-#include "../include/Canvas.h"
+#include "polynomPower4.h"
+#include "linearInterceptEquation.h"
+#include "Canvas.h"
 
 int main()
 {
