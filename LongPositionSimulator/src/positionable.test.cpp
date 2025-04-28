@@ -5,5 +5,5 @@
 #include <gtest/gtest.h>
 
 TEST(MySecondTest, TestCase1) {
-EXPECT_EQ(2+2, 4); // Example test case
+    EXPECT_EQ(2+2, 4); // Example test case
 }

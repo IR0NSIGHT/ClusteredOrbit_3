@@ -30,7 +30,6 @@ include_directories(include)
 
 # List all source files except test files
 file(GLOB_RECURSE SOURCES "src/*.cpp")
-list(FILTER SOURCES EXCLUDE REGEX "src/test_.*\\.cpp")
 
 # Add the main executable
 add_executable(LongPositionSimulator LongPositionSimulator.cpp ${SOURCES})
@@ -78,12 +77,11 @@ FetchContent_MakeAvailable(googletest)
 # Enable testing
 enable_testing()
 
-# List all test source files
-file(GLOB_RECURSE TEST_SOURCES "${CMAKE_SOURCE_DIR}/src/test_*.cpp")
-
 # Add the test executable
-add_executable(runTests ${TEST_SOURCES} ${SOURCES}
-        test_main.cpp)
+add_executable(runTests ${SOURCES}
+        test_main.cpp
+        src/positionable.test.cpp
+        src/polynomPower4.test.cpp)
 
 # Link GoogleTest and other necessary libraries to the test executable
 target_link_libraries(runTests GTest::gtest GTest::gtest_main SFML::Graphics Eigen3::Eigen)
