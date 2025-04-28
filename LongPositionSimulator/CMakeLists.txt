@@ -81,7 +81,8 @@ enable_testing()
 add_executable(runTests ${SOURCES}
         test_main.cpp
         src/positionable.test.cpp
-        src/polynomPower4.test.cpp)
+        src/polynomPower4.test.cpp
+        src/Collission.test.cpp)
 
 # Link GoogleTest and other necessary libraries to the test executable
 target_link_libraries(runTests GTest::gtest GTest::gtest_main SFML::Graphics Eigen3::Eigen)

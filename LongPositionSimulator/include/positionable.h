@@ -43,7 +43,11 @@ struct positionable
     {
         return velocity.norm() != 0. && acceleration.norm() == 0.;
     }
-    
+
+    bool collidesWithAt(positionable& other, double time) {
+        return distanceToObjectAt(time, other) <= (other.radius + this->radius + 0.0001);
+    }
+
     pos3d posAt(double time) const
     {
         return position + velocity * time + acceleration * time * time * 0.5;
